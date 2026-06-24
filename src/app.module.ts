@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Task } from './tasks/tasks.entity';
+import { AuthModule } from './auth/auth.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -11,9 +14,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'root',
       password: '',
       database: 'taskflow',
-      entities: [], // ← Category et User ajoutés ici
+      entities: [Task, ], // ← Category et User ajoutés ici
       synchronize: true,
     }),
+    AuthModule,
+    TasksModule,
+
   ],
   controllers: [AppController],
   providers: [AppService],
