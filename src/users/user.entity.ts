@@ -4,7 +4,7 @@ export enum Role {
 }
 
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Task } from '../tasks/task.entity';
+import { Task } from '../tasks/tasks.entity';
 
 @Entity()
 export class User {
