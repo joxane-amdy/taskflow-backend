@@ -1,5 +1,5 @@
 import { IsString, IsEnum, IsOptional, IsBoolean, IsInt } from 'class-validator';
-import { TaskType, Priorite } from '../task.entity';
+import { TaskType, Priorite } from '../tasks.entity';
 
 export class UpdateTaskDto {
   @IsOptional()
