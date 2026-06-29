@@ -18,7 +18,4 @@ export class UpdateTaskDto {
   @IsBoolean()
   terminee?: boolean;
 
-  @IsOptional()
-  @IsInt()
-  categoryId?: number;
 }

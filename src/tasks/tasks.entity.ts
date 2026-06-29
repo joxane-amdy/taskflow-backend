@@ -16,7 +16,7 @@ import {
   ManyToOne, JoinColumn, CreateDateColumn,
 } from 'typeorm';
 import { User } from '../users/user.entity';
-import { Category } from '../categories/category.entity';
+
 
 @Entity()
 export class Task {
@@ -43,8 +43,4 @@ export class Task {
   @JoinColumn({ name: 'idUser' })
   user: User;
 
-  // Plusieurs tâches appartiennent à une catégorie
-  @ManyToOne(() => Category, (category) => category.tasks, { eager: true })
-  @JoinColumn({ name: 'idCategory' })
-  category: Category;
 }

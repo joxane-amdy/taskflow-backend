@@ -19,7 +19,6 @@ export class TasksService {
       priorite: dto.priorite,
       terminee: dto.terminee,
       user: { id: userId } as any,
-      category: dto.categoryId ? ({ id: dto.categoryId } as any) : undefined,
     });
     return this.tasksRepository.save(task);
   }
@@ -28,7 +27,7 @@ export class TasksService {
   async findAll(userId: number): Promise<Task[]> {
     return this.tasksRepository.find({
       where: { user: { id: userId } },
-      relations: ['category', 'user'],
+      relations: { user: true },
       order: { dateCreation: 'DESC' },
     });
   }
@@ -36,7 +35,7 @@ export class TasksService {
   async findOne(id: number, userId: number): Promise<Task> {
     const task = await this.tasksRepository.findOne({
       where: { id },
-      relations: ['category', 'user'],
+      relations: { user: true },
     });
     if (!task) throw new NotFoundException(`Tâche #${id} introuvable`);
     if (task.user.id !== userId) {
@@ -52,7 +51,6 @@ export class TasksService {
     if (dto.type !== undefined) task.type = dto.type;
     if (dto.priorite !== undefined) task.priorite = dto.priorite;
     if (dto.terminee !== undefined) task.terminee = dto.terminee;
-    if (dto.categoryId !== undefined) task.category = { id: dto.categoryId } as any;
 
     return this.tasksRepository.save(task);
   }

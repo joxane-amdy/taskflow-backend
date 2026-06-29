@@ -15,8 +15,4 @@ export class CreateTaskDto {
   @IsOptional()
   @IsBoolean()
   terminee?: boolean;
-
-  @IsOptional()
-  @IsInt()
-  categoryId?: number;
 }
