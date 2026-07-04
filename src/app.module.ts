@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config'; // charge le fichier .env
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,14 +11,17 @@ import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }), // rend process.env.X disponible partout
+
+    TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'taskflow',
-      entities: [User,Task], // ← Category et User ajoutés ici
+      host: process.env.DB_HOST || 'localhost',
+      port: Number(process.env.DB_PORT) || 3306,
+      username: process.env.DB_USERNAME || 'root',
+      password: process.env.DB_PASSWORD || '',
+      database: process.env.DB_NAME || 'taskflow-db',
+      entities: [User, Task], // ← Task et Category ajoutées ici
       synchronize: true,
     }),
     UsersModule,
