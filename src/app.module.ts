@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config'; // charge le fichier .env
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,23 +12,28 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }), // rend process.env.X disponible partout
+    ConfigModule.forRoot({ isGlobal: true }),
 
-    TypeOrmModule.forRoot({
-  type: 'mysql',
-  host: process.env.MYSQLHOST,
-  port: Number(process.env.MYSQLPORT),
-  username: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  entities: [User, Task],
-  synchronize: true,
-}),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: 'mysql',
+        // Compatible XAMPP local ET Railway en production
+        host:     config.get('MYSQLHOST')     || config.get('DB_HOST')     || 'localhost',
+        port:     Number(config.get('MYSQLPORT')    || config.get('DB_PORT'))    || 3306,
+        username: config.get('MYSQLUSER')     || config.get('DB_USERNAME') || 'root',
+        password: config.get('MYSQLPASSWORD') || config.get('DB_PASSWORD') || '',
+        database: config.get('MYSQLDATABASE') || config.get('DB_NAME')     || 'taskflow',
+        entities: [User, Task],
+        synchronize: true,
+      }),
+    }),
+
     UsersModule,
     AuthModule,
-    TasksModule, 
-    WeatherModule
-
+    TasksModule,
+    WeatherModule,
   ],
   controllers: [AppController],
   providers: [AppService],
