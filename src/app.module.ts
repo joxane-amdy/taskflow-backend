@@ -15,15 +15,15 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot({ isGlobal: true }), // rend process.env.X disponible partout
 
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST || 'localhost',
-      port: Number(process.env.DB_PORT) || 3306,
-      username: process.env.DB_USERNAME || 'root',
-      password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_NAME || 'taskflow-db',
-      entities: [User, Task], // ← Task et Category ajoutées ici
-      synchronize: true,
-    }),
+  type: 'mysql',
+  host: process.env.MYSQLHOST,
+  port: Number(process.env.MYSQLPORT),
+  username: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  entities: [User, Task],
+  synchronize: true,
+}),
     UsersModule,
     AuthModule,
     TasksModule, 
