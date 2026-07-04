@@ -1,23 +1,23 @@
 services:
-  # Base de données MySQL
+
   db:
     image: mysql:8
     container_name: taskflow
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: taskflow-db
     ports:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_PASSWORD}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot123"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 30s
 
-  # Backend NestJS
   api:
     build: .
     container_name: taskflow-api
@@ -25,7 +25,11 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - .env
+      - .env.docker
+    environment:
+      DB_HOST: db
+      DB_PASSWORD: root123
+      DB_NAME: taskflow-db
     depends_on:
       db:
         condition: service_healthy
