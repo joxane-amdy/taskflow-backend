@@ -5,9 +5,26 @@ import { UsersController } from './users.controller';
 import { User } from './user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
-  providers: [UsersService],
-  controllers: [UsersController],
-  exports: [UsersService], // Exporté pour AuthModule
+
+  // Rend l'entité User disponible via TypeORM
+  imports: [
+    TypeOrmModule.forFeature([User]),
+  ],
+
+  // Déclaration du service
+  providers: [
+    UsersService,
+  ],
+
+  // Déclaration du contrôleur
+  controllers: [
+    UsersController,
+  ],
+
+  // Export du service
+  // Permet à AuthModule d'utiliser UsersService
+  exports: [
+    UsersService,
+  ],
 })
 export class UsersModule {}
